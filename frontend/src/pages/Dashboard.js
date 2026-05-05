@@ -6,7 +6,7 @@ import LeaveModule from '../components/Leave/LeaveModule';
 import SubstitutionModule from '../components/Substitution/SubstitutionModule';
 
 const Dashboard = () => {
-  const { faculty, logout } = useAuth();
+  const { faculty, logout, isAdmin } = useAuth();
   const [activeTab, setActiveTab] = useState('faculty');
 
   const renderModule = () => {
@@ -24,7 +24,19 @@ const Dashboard = () => {
       {/* Navbar */}
       <div className="navbar">
         <h2>🎓 Faculty Dashboard</h2>
-        <span>Welcome, <strong>{faculty?.name}</strong></span>
+        <span>
+          Welcome, <strong>{faculty?.name}</strong>
+          <span style={{
+            background: isAdmin ? '#e94560' : '#28a745',
+            color: 'white',
+            fontSize: '0.75rem',
+            padding: '2px 10px',
+            borderRadius: '10px',
+            marginLeft: '10px'
+          }}>
+            {isAdmin ? '👑 Admin' : '👨‍🏫 Faculty'}
+          </span>
+        </span>
         <button onClick={logout}>Logout</button>
       </div>
 
@@ -60,6 +72,20 @@ const Dashboard = () => {
 
         {/* Main Content */}
         <div className="main-content">
+          {/* Role info banner */}
+          {!isAdmin && (
+            <div style={{
+              background: '#d4edda',
+              border: '1px solid #28a745',
+              borderRadius: '8px',
+              padding: '10px 20px',
+              marginBottom: '20px',
+              color: '#155724',
+              fontSize: '0.9rem'
+            }}>
+              👁️ You are in <strong>View Mode</strong> — You can apply for leave and view all data.
+            </div>
+          )}
           {renderModule()}
         </div>
       </div>

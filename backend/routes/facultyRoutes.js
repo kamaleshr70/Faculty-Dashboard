@@ -12,7 +12,7 @@ router.post('/register', async (req, res) => {
     if (existing) return res.status(400).json({ message: 'Email already exists' });
 
     const hashed = await bcrypt.hash(password, 10);
-    const faculty = new Faculty({ name, email, password: hashed, department, subject });
+    const faculty = new Faculty({ name, email, password: hashed, department, subject, role: req.body.role || 'faculty' });
     await faculty.save();
     res.status(201).json({ message: '✅ Faculty registered successfully' });
   } catch (err) {
@@ -31,7 +31,7 @@ router.post('/login', async (req, res) => {
     if (!isMatch) return res.status(400).json({ message: 'Invalid password' });
 
     const token = jwt.sign(
-      { id: faculty._id, name: faculty.name },
+      { id: faculty._id, name: faculty.name, role: faculty.role },
       process.env.JWT_SECRET,
       { expiresIn: '1d' }
     );
@@ -40,7 +40,8 @@ router.post('/login', async (req, res) => {
       name: faculty.name, 
       email: faculty.email,
       department: faculty.department,
-      subject: faculty.subject
+      subject: faculty.subject,
+      role: faculty.role
     }});
   } catch (err) {
     res.status(500).json({ message: err.message });

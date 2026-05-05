@@ -24,8 +24,11 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
   };
 
+  // Helper to check role
+  const isAdmin = faculty?.role === 'admin';
+
   return (
-    <AuthContext.Provider value={{ faculty, token, login, logout }}>
+    <AuthContext.Provider value={{ faculty, token, login, logout, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );
